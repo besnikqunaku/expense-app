@@ -2,6 +2,10 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { v4 as uuid } from 'uuid';
 import { ReportType, data } from './data';
 
+interface UpdateReport {
+  amount?: number;
+  source?: string;
+}
 @Injectable()
 export class AppService {
   getAllReports(type: ReportType) {
@@ -34,7 +38,7 @@ export class AppService {
     return newReport;
   }
 
-  updateReport(type: ReportType, id: string, amount: number, source: string) {
+  updateReport(type: ReportType, id: string, body: UpdateReport) {
     const reportIndex = data.report.findIndex(
       (report) => report.id === id && report.type === type,
     );
@@ -45,8 +49,8 @@ export class AppService {
 
     data.report[reportIndex] = {
       ...data.report[reportIndex],
-      amount,
-      source,
+      amount: body.amount,
+      source: body.source,
       updated_at: new Date(),
     };
 
